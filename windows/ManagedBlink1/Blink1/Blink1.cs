@@ -298,10 +298,15 @@ namespace ThingM.Blink1
         /// <param name="waitUntilFinished">
         /// Specify to wait (True) or not (False) for the color fade to be finished before giving back the control.
         /// </param>
+        /// <param name="ledn">
+        /// 0: both leds
+        /// 1: only first led
+        /// 2: only second led
+        /// </param>
         /// <returns>
         /// True if the color was successfully applied, False otherwise.
         /// </returns>
-        public bool FadeToColor(ushort numberOfMillisecond, ushort red, ushort green, ushort blue, bool waitUntilFinished)
+        public bool FadeToColor(ushort numberOfMillisecond, ushort red, ushort green, ushort blue, bool waitUntilFinished, ushort ledn = 0)
         {
             red = (red > (ushort)255) ? (ushort)255 : red;
 
@@ -323,6 +328,7 @@ namespace ThingM.Blink1
             buffers[4] = Convert.ToByte(this.IsAdjustingGammaLevel ? this.AdjustGammaLevel(blue) : blue);
             buffers[5] = Convert.ToByte((numberOfMillisecond / 10) >> 8);
             buffers[6] = Convert.ToByte((numberOfMillisecond / 10) % 0xff);
+            buffers[7] = Convert.ToByte(ledn);
 
             bool writeResult = this.hidDevice.WriteFeatureData(buffers);
 
